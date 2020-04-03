@@ -24,6 +24,12 @@ import pickle
 
 
 def load_data(database_filepath):
+    # loads data from SQLlite database in DataFrame
+    # splits DataFrame into dependent and independent variables for modelling
+    # extracts category names from DataFrame
+    # accepts filepath as inputs
+    # returns dependent variable, independent variable, and category names
+
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table('Messages',engine)
     X = df.message.values
@@ -33,6 +39,13 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    # splits a string of text into tokens
+    # converts individual tokens into lemmatized form
+    # converts to lowercase
+    # removes whitespace
+    # accepts text string
+    # returns cleaned tokens
+
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -44,6 +57,10 @@ def tokenize(text):
 
 
 def build_model():
+    # Builds a model using pipelines
+    # applies a count vectorizer in parallel with a TF-IDF transformation
+    # gridsearch is applied to find the best hyperparameters
+
     pipeline = Pipeline([
         ('features', FeatureUnion([
 
@@ -72,6 +89,8 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    # prints out recall, precision and F1 score for the model built on test set
+
     Y_pred = model.predict(X_test)
     for i in range(len(category_names)):
         print(classification_report(Y_test[i], Y_pred[i], labels = [0,1] ))
@@ -79,6 +98,8 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    # saves the model in a pickle file
+    
     filename =  model_filepath
     pickle.dump(model, open(filename, 'wb'))
     pass

@@ -3,6 +3,9 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    # loads the data from a local csv files and merges them into a single dataframe
+    # returns a DataFrame
+
     messages_df = pd.read_csv(messages_filepath)
     categories_df = pd.read_csv(categories_filepath)
     df = pd.merge(messages_df, categories_df, how='inner', on='id')
@@ -10,6 +13,10 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    # cleans the loaded data by splitting compound columns into single columns
+    # drops duplicates from the datasets
+    # accepts DataFrame as input
+    # returns cleaned DataFrame
 
     categories = df.categories.str.split(';',expand=True)
 
@@ -37,6 +44,9 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    # saves the DataFrame into a SQLlite table
+    # accepts DataFrame and filename as inputs
+    
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('Messages', engine, index=False,if_exists='replace')
     pass

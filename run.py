@@ -40,8 +40,14 @@ def index():
 
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
+
+    df2 = pd.DataFrame(df.iloc[:,4:].sum().sort_values(ascending = False))
+    df2.columns = ['Count']
+    df2 = df2.iloc[1:,:]
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    category_names = list(df2.index)
+    message_count = df2.Count
 
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -63,6 +69,26 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+
+        {
+                'data': [
+                    Bar(
+                        x = category_names,
+                        y = message_count
+                    )
+
+                ],
+            'layout': {
+                'title': 'Count of Messages per Category',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
+                }
+            }
+
         }
     ]
 
